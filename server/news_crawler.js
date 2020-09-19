@@ -48,6 +48,7 @@ async function getNewsArticles(country, timeFrame) {
         timeframe: timeFrame
     })
 
+    // TODO: limit number of articles?
     // console.log(articles)
 
     if (articles.length > 0) {

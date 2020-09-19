@@ -37,8 +37,10 @@ const CalamityMap = ({countries, handleSelectCountry}) => {
           regions: [
             {
               values: countries,
-              scale: ['#146804', '#ff0000'], // TODO: figure out how to do colours better
-              normalizeFunction: 'polynomial'
+              scale: ['#ff0000', '#146804'], // TODO: figure out how to do colours better
+              normalizeFunction: 'linear',
+              min: -2000, // TODO: are these right
+              max: 4000
             }
           ]
         }}
