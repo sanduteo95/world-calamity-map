@@ -1,7 +1,7 @@
 import React from 'react'
 import { VectorMap } from 'react-jvectormap'
 
-const CalamityMap = ({countries, handleSelectCountry}) => {
+const CalamityMap = ({countries, min, max, handleSelectCountry}) => {
   return (
     <div>
       <h1>World map of calamities</h1>
@@ -39,8 +39,8 @@ const CalamityMap = ({countries, handleSelectCountry}) => {
               values: countries,
               scale: ['#ff0000', '#146804'], // TODO: figure out how to do colours better
               normalizeFunction: 'linear',
-              min: -2000, // TODO: are these right
-              max: 4000
+              min: min, // TODO: calculate these
+              max: max // TODO: calculate these
             }
           ]
         }}
