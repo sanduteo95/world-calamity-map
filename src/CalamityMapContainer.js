@@ -19,6 +19,7 @@ const CalamityMapContainer = () => {
         return getCalamity(country)
           .then(calamity => {
             const countryCode = Object.keys(country)[0]
+            // TODO: maybe store min and max during cronjob (also, somehow these are incorrect)
             if (calamity[countryCode] > max) {
               setMax(calamity[countryCode])
             }
@@ -34,6 +35,7 @@ const CalamityMapContainer = () => {
           })
       }))
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
