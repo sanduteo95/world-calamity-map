@@ -6,8 +6,12 @@ const countries = require('./lib/countries')
 const calamityCalculator = require('./lib/calamity_calculator')
 const cron = require('./lib/cron')
 
+const mockCalamities = require('./mocks/index')
+
 // start cron job
-cron.start()
+if (process.env.NODE_ENV === 'production') {
+  cron.start()
+}
 
 const port = process.env.PORT || 3001
 
@@ -24,12 +28,16 @@ app.get('/api/countries', (req, res) => {
 
 app.get('/api/calamity/:country', (req, res) => {
   console.log(`Receiving request at /api/calamity/${req.params.country}`)
-  calamityCalculator.getCalamitiesPerCountry(req.params.country)
-    .then(calamity => {
-      console.log('Received response')
+  if (process.env.NODE_ENV === 'production') {
+    calamityCalculator.getCalamitiesPerCountry(req.params.country)
+      .then(calamity => {
+        res.setHeader('Content-Type', 'application/json')
+        res.send(JSON.stringify({ calamity: calamity }))
+      })
+    } else {
       res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify({ calamity: calamity }))
-    })
+      res.send(JSON.stringify({ calamity: mockCalamities(req.params.country) }))
+    }
 })
 
 if (process.env.NODE_ENV === 'production') {

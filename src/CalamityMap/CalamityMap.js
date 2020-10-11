@@ -4,14 +4,13 @@ import { VectorMap } from 'react-jvectormap'
 const CalamityMap = ({countries, min, max, handleSelectCountry}) => {
   return (
     <div>
-      <h1>World map of calamities</h1>
       <VectorMap
         map='world_mill'
         backgroundColor='transparent'
         zoomOnScroll={false}
         containerStyle={{
           width: '100%',
-          height: '640px' // TODO: responsiveness
+          height: (window.innerHeight - (document.getElementById('title') ? document.getElementById('title').clientHeight : 0)) + 'px' // TODO: responsiveness
         }}
         onRegionClick={handleSelectCountry}
         containerClassName='map'
@@ -27,9 +26,7 @@ const CalamityMap = ({countries, min, max, handleSelectCountry}) => {
             'fill-opacity': 0.8,
             cursor: 'pointer'
           },
-          selected: {
-            fill: '#2938bc' //TODO: remove colour for selected country
-          },
+          selected: {},
           selectedHover: {}
         }}
         regionsSelectable={true}

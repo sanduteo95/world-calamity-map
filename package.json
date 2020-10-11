@@ -12,6 +12,7 @@
     "express-pino-logger": "^5.0.0",
     "google-news-rss": "^0.4.1",
     "node-cache": "^5.1.2",
+    "node-countries": "^1.5.0",
     "node-env-run": "^4.0.1",
     "nodemon": "^2.0.4",
     "npm-run-all": "^4.1.5",
@@ -19,8 +20,10 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-jvectormap": "0.0.16",
+    "react-loading-overlay": "^1.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-spinners": "^0.9.0",
     "sentiment": "^5.0.2",
     "textversionjs": "^1.1.3"
   },

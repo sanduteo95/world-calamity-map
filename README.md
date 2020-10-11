@@ -4,11 +4,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm start:dev`
+### `npm run start:dev`
 
 Runs the Node.js Express server **and** the React front-end through `react-scripts`, hosting the website at `http://localhost:3000` and the backend at `http://localhost:80`.
 
-### `npm start:prod`
+### `npm start`
 
 Runs the Node.js Express server, which also serves the built front-end code inside the `build/` folder at ### `http://localhost:80`
 
