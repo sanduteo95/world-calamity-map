@@ -24,13 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-      - name: Deploy React app to GitHub pages
-        uses: crazy-max/ghaction-github-pages@v2
-        with:
-          target_branch: gh-pages
-          build_dir: build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+
       - name: Deploy Node.js Express server to Heroku
         # You may pin to the exact commit or the version
         uses: AkhileshNS/heroku-deploy@v3.5.6
