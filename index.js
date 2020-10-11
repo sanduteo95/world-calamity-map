@@ -1,12 +1,15 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const path = require('path')
 const pino = require('express-pino-logger')()
-const countries = require('./countries')
-const calamityCalculator = require('./calamity_calculator')
-const cron = require('./cron')
+const countries = require('./lib/countries')
+const calamityCalculator = require('./lib/calamity_calculator')
+const cron = require('./lib/cron')
 
 // start cron job
 cron.start()
+
+const port = process.env.PORT || 3001
 
 // create API
 const app = express()
@@ -38,6 +41,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(3001, () =>
-  console.log('Express server is running on localhost:3001')
+app.listen(port, () =>
+  console.log('Express server is running on localhost:' + port)
 )
