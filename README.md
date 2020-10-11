@@ -4,22 +4,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm start:dev`
 
-Runs the Node.js Express server.
+Runs the Node.js Express server **and** the React front-end through `react-scripts`, hosting the website at `http://localhost:3000` and the backend at `http://localhost:80`.
+
+### `npm start:prod`
+
+Runs the Node.js Express server, which also serves the built front-end code inside the `build/` folder at ### `http://localhost:80`
 
 ### `npm run build`
 
-Does nothing.
-
-### `npm run dev`
-
-Runs the React app and Node.js Express server in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `npm run deploy`
-
-Deploys the React app to GitHub pages.
+Builds the production front-end components and places them in the `build/` foldet. Only used for production environments.
