@@ -30,9 +30,15 @@ app.get('/api/countries', (req, res) => {
 app.get('/api/max/calamity', (req, res) => {
   console.log(`Receiving request at /api/max/calamity`)
   if (process.env.NODE_ENV === 'production') {
-    const max = calamityCalculator.getMaxCalamity()
+    let max
+    try {
+      max = calamityCalculator.getMaxCalamity()
+    } catch (err) {
+      console.log(err)
+      max = 400
+    }
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify({max: JSON.stringify(max)}))
+    res.send(JSON.stringify({max: max}))
   } else {
     res.setHeader('Content-Type', 'application/json')
     const calamities = Object.values(mocks.calamities)
@@ -51,9 +57,15 @@ app.get('/api/max/calamity', (req, res) => {
 app.get('/api/min/calamity', (req, res) => {
   console.log(`Receiving request at /api/min/calamity`)
   if (process.env.NODE_ENV === 'production') {
-    const min = calamityCalculator.getMinCalamity()
+    let min
+    try {
+      min = calamityCalculator.getMinCalamity()
+    } catch (err) {
+      console.log(err)
+      min = -400
+    }
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify({min: JSON.stringify(min)}))
+    res.send(JSON.stringify({min: min}))
   } else {
     res.setHeader('Content-Type', 'application/json')
     const calamities = Object.values(mocks.calamities)
