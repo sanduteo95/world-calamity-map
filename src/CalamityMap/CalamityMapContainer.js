@@ -54,16 +54,39 @@ const CalamityMapContainer = () => {
             })
             .then(response => {
               setMin(response.data.min)
-              return getCalamities()
+              return getCalamities(countries)
             })
             .then(response => {
               setCountries(response.data)
-          })
+             })
+            .catch(err => {
+              console.log(err)
+              return getCalamities(countries)
+            })
+            .then(response => {
+              const calamities = response.data
+              let max = 0
+              let min = 0
+              for(let i=0; i<calamities.length; i++) {
+                if (calamities[i] > max) {
+                  max = calamities[i]
+                }
+                if (calamities[i] < min) {
+                  min = calamities[i]
+                }
+              }
+              setCountries(calamities)
+              setMax(max)
+              setMin(min)
+            })
         }
       })
       .then(() => {
         setLoading(false)
-    })
+      })
+      .catch(err => {
+        console.log(err)
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

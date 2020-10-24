@@ -34,8 +34,8 @@ app.get('/api/max/calamity', (req, res) => {
     try {
       max = calamityCalculator.getMaxCalamity()
     } catch (err) {
-      console.log(err)
-      max = 400
+      res.status(500)
+      res.render('error', { error: err })
     }
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify({max: max}))
@@ -60,8 +60,8 @@ app.get('/api/min/calamity', (req, res) => {
     try {
       min = calamityCalculator.getMinCalamity()
     } catch (err) {
-      console.log(err)
-      min = -400
+      res.status(500)
+      res.render('error', { error: err })
     }
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify({min: min}))
