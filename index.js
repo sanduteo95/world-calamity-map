@@ -42,7 +42,6 @@ app.get('/api/max/calamity', (req, res) => {
   } else {
     res.setHeader('Content-Type', 'application/json')
     const calamities = Object.values(mocks.calamities)
-    console.log(calamities)
     let max = 0
     for(let i=0; i<calamities.length; i++) {
       if (calamities[i] > max) {

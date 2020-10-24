@@ -21,6 +21,13 @@ const CalamityMapContainer = () => {
           return Promise.all(response.data.countries.map(country => {
             return getCalamity(country)
               .then(calamity => {
+                const countryCode = Object.keys(country)[0]
+                if (calamity[countryCode] > max) {
+                  setMax(calamity[countryCode])
+                }
+                if (calamity[countryCode] < min) {
+                  setMin(calamity[countryCode])	
+                }
                 setCountries(countries => {
                   return {
                     ...countries,
@@ -64,8 +71,6 @@ const CalamityMapContainer = () => {
     <Loader isActive={loading}>
       <h1 id='title'>World map of calamities</h1>
       <CalamityMap countries={countries} min={min} max={max} selectedCountryCalamity={countries[selectedCountry]} selectedCountryNews={selectedCountryNews} handleSelectCountry={(e, countryCode) => {
-        console.log(countryCode)
-        console.log(selectedCountry)
         if (selectedCountry !== countryCode) {
           setSelectedCountry(countryCode)
           return getNews(countryCode)
