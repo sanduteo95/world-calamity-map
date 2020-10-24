@@ -1,6 +1,6 @@
 const countries = require('node-countries')
 
-const calamities = {
+module.exports.calamities = {
     'AD': 14,
     'AE': 54,
     'AF': -123,
@@ -251,14 +251,13 @@ const calamities = {
     'ZM': 42,
     'ZW': -63
 }
-  
 
-module.exports = name => {
+module.exports.calamity = name => {
     console.log('Getting stored calamity for country: ' + name)
     const countryCode = countries.getCountryByName(name).alpha2
     if (countryCode) {
         console.log('Country code: ' + countryCode)
-        return calamities[countryCode]
+        return module.exports.calamities[countryCode]
     } else {
         return 0
     }

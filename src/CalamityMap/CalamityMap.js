@@ -1,9 +1,13 @@
 import React from 'react'
 import { VectorMap } from 'react-jvectormap'
 
-const CalamityMap = ({countries, min, max, handleSelectCountry}) => {
+const CalamityMap = ({countries, min, max, selectedCountryCalamity, selectedCountryNews, handleSelectCountry}) => {
   return (
     <div>
+      {selectedCountryCalamity && (<div style={{border: "1px solid black"}}>
+        <p>selectedCountryCalamity</p>
+        {/* <p>selectedCountryNews</p> */}
+      </div>)}
       <VectorMap
         map='world_mill'
         backgroundColor='transparent'
@@ -34,10 +38,10 @@ const CalamityMap = ({countries, min, max, handleSelectCountry}) => {
           regions: [
             {
               values: countries,
-              scale: ['#ff0000', '#146804'], // TODO: figure out how to do colours better
+              scale: ['#ff0000', '#146804'],
               normalizeFunction: 'linear',
-              min: min, // TODO: calculate these
-              max: max // TODO: calculate these
+              min: min,
+              max: max
             }
           ]
         }}

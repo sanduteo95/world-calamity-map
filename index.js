@@ -3,10 +3,11 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const pino = require('express-pino-logger')()
 const countries = require('./lib/countries')
+const newsCrawler = require('./lib/news_crawler')
 const calamityCalculator = require('./lib/calamity_calculator')
 const cron = require('./lib/cron')
 
-const mockCalamities = require('./mocks/index')
+const mocks = require('./mocks/index')
 
 // start cron job
 if (process.env.NODE_ENV === 'production') {
@@ -23,7 +24,61 @@ app.use(pino)
 app.get('/api/countries', (req, res) => {
   console.log(`Receiving request at /api/countries`)
   res.setHeader('Content-Type', 'application/json')
-  res.send(JSON.stringify({ countries: countries.getCountries() }))
+  res.send(JSON.stringify(countries.getCountries()))
+})
+
+app.get('/api/max/calamity', (req, res) => {
+  console.log(`Receiving request at /api/max/calamity`)
+  if (process.env.NODE_ENV === 'production') {
+    const max = calamityCalculator.getMaxCalamity()
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify({max: JSON.stringify(max)}))
+  } else {
+    res.setHeader('Content-Type', 'application/json')
+    const calamities = Object.values(mocks.calamities)
+    console.log(calamities)
+    let max = 0
+    for(let i=0; i<calamities.length; i++) {
+      if (calamities[i] > max) {
+        max = calamities[i]
+      }
+    }
+
+    res.send(JSON.stringify({max: max}))
+  }
+})
+
+app.get('/api/min/calamity', (req, res) => {
+  console.log(`Receiving request at /api/min/calamity`)
+  if (process.env.NODE_ENV === 'production') {
+    const min = calamityCalculator.getMinCalamity()
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify({min: JSON.stringify(min)}))
+  } else {
+    res.setHeader('Content-Type', 'application/json')
+    const calamities = Object.values(mocks.calamities)
+    let min = 0
+    for(let i=0; i<calamities.length; i++) {
+      if (calamities[i] < min) {
+        min = calamities[i]
+      }
+    }
+    res.send(JSON.stringify({min: min}))
+  }
+})
+
+app.get('/api/calamity', (req, res) => {
+  console.log(`Receiving request at /api/calamity`)
+  if (process.env.NODE_ENV === 'production') {
+    calamityCalculator.getCalamities()
+      .then(calamities => {
+        res.setHeader('Content-Type', 'application/json')
+        res.send(JSON.stringify(calamities))
+      })
+  } else {
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify(mocks.calamities))
+  }
 })
 
 app.get('/api/calamity/:country', (req, res) => {
@@ -36,7 +91,26 @@ app.get('/api/calamity/:country', (req, res) => {
       })
     } else {
       res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify({ calamity: mockCalamities(req.params.country) }))
+      res.send(JSON.stringify({ calamity: mocks.calamity(req.params.country) }))
+    }
+})
+
+app.get('/api/news/:country', (req, res) => {
+  console.log(`Receiving request at /api/nws/${req.params.country}`)
+  if (process.env.NODE_ENV === 'production') {
+    newsCrawler.getCountryNews(req.params.country)
+      .then(news => {
+        res.setHeader('Content-Type', 'application/json')
+        res.send(JSON.stringify({ news: news }))
+      })
+    } else {
+      res.setHeader('Content-Type', 'application/json')
+      res.send(JSON.stringify({ news: {
+        'http://www.test.com': {
+          title: 'Test',
+          content: 'Test'
+        }
+      }}))
     }
 })
 
