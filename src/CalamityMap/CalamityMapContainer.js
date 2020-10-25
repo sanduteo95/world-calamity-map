@@ -10,7 +10,6 @@ const CalamityMapContainer = () => {
   const [max, setMax] = useState(-200)
   const [loading, setLoading] = useState(false)
   const [selectedCountry, setSelectedCountry] = useState('')
-  const [selectedCountryNews, setSelectedCountryNews] = useState({})
 
   useEffect(() => {
     console.log(`Sending request to /api/countries`)
@@ -24,7 +23,6 @@ const CalamityMapContainer = () => {
             return getCalamity(country)
               .then(calamity => {
                 const countryCode = Object.keys(country)[0]
-                // TODO: min and max don't get updated
                 setMax(max => {
                   if (calamity[countryCode] > max) {
                     return calamity[countryCode]
@@ -47,17 +45,6 @@ const CalamityMapContainer = () => {
                 })
               })
           }))
-          .then(() => {
-            return getMaxCalamity()
-          })
-          .then(response => {
-            setMax(response.data.max)
-            return getMinCalamity()
-          })
-          .then(response => {
-            setMin(response.data.min)
-            return
-          })
         } else {
           return getMaxCalamity()
             .then(response => {
@@ -76,17 +63,19 @@ const CalamityMapContainer = () => {
               const calamities = response.data
               let newMax = -200
               let newMin = 200
-              for(let i=0; i<calamities.length; i++) {
-                if (calamities[i] > newMax) {
-                  newMax = calamities[i]
+              if (max !== newMax && min !== newMin) {
+                for(let i=0; i<calamities.length; i++) {
+                  if (calamities[i] > newMax) {
+                    newMax = calamities[i]
+                  }
+                  if (calamities[i] < newMin) {
+                    newMin = calamities[i]
+                  }
                 }
-                if (calamities[i] < newMin) {
-                  newMin = calamities[i]
-                }
+                setMax(newMax)
+                setMin(newMin)
               }
               setCountries(calamities)
-              setMax(newMax)
-              setMin(newMin)
               return
             })
         }
@@ -103,18 +92,32 @@ const CalamityMapContainer = () => {
   return (
     <Loader isActive={loading}>
       <h1 id='title'>World map of calamities</h1>
-      <CalamityMap countries={countries} min={min} max={max} selectedCountryCalamity={countries[selectedCountry]} selectedCountryNews={selectedCountryNews} handleSelectCountry={(e, countryCode) => {
+      <CalamityMap countries={countries} min={min} max={max} selectedCountryCalamity={countries[selectedCountry]} handleSelectCountry={(e, countryCode) => {
         if (selectedCountry !== countryCode) {
           setSelectedCountry(countryCode)
           return getNews(countryCode)
             .then(response => {
-              setSelectedCountryNews(response.data)
+              Array.from(document.getElementsByClassName('jvectormap-tip')).forEach((el) => { 
+                if (el.innerHTML.includes(countryCode)) {
+                  el.innerHTML += '<br/>'
+                  let child = '<ul>'
+                  Object.keys(response.data.news).forEach(newsArticleLink => {
+                    child += '<li><a href="' + newsArticleLink + '">' + response.data.news[newsArticleLink].title + '</a></li>'
+                  })
+                  child += '</ul>'
+                  el.innerHTML += child
+                } else {
+                  el.remove()
+                }
+              })
             })
           // TODO: list some of the news articles or maybe tags
           // TODO: list some petitions to help with or resources
         } else {
+          Array.from(document.getElementsByClassName('jvectormap-tip')).forEach((el) => { 
+            el.remove()
+          })
           setSelectedCountry('')
-          setSelectedCountryNews({})
         }
       }} />
     </Loader>

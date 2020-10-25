@@ -1,19 +1,11 @@
 import React from 'react'
 import { VectorMap } from 'react-jvectormap'
 
-const CalamityMap = ({countries, min, max, selectedCountryCalamity, selectedCountryNews, handleSelectCountry}) => {
+import './CalamityMap.scss'
+
+const CalamityMap = ({countries, min, max, handleSelectCountry}) => {
   return (
     <div>
-      {selectedCountryCalamity && (<div style={{border: "1px solid black"}}>
-        <p>{selectedCountryCalamity}</p>
-        <ul>
-          {Object.keys(selectedCountryNews).forEach(newsArticleLink => {
-            return (<li>
-              <a href={newsArticleLink}>{selectedCountryNews[newsArticleLink].title}</a>
-            </li>)
-          })}
-        </ul>
-      </div>)}
       <VectorMap
         map='world_mill'
         backgroundColor='transparent'
@@ -40,11 +32,17 @@ const CalamityMap = ({countries, min, max, selectedCountryCalamity, selectedCoun
           selectedHover: {}
         }}
         regionsSelectable={true}
+        onRegionTipShow={(e, el, code) => {
+          el.html(el.html()+' ('+code+': '+countries[code]+')');
+        }}
         series={{
           regions: [
             {
               values: countries,
               scale: ['#ff0000', '#146804'],
+              legend: {
+                vertical: true
+              },
               normalizeFunction: 'linear',
               min: min,
               max: max

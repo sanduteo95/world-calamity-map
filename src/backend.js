@@ -57,11 +57,17 @@ export const getMaxCalamity = () => {
     url: '/api/max/calamity',
     method: 'get'
   })
+  .then(response => {
+    return Promise.resolve(response)
+  })
 }
 
 export const getMinCalamity = () => {
   return api({
     url: '/api/min/calamity',
     method: 'get'
+  })
+  .then(response => {
+    return Promise.resolve(response)
   })
 }
