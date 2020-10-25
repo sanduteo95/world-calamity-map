@@ -5,8 +5,14 @@ const CalamityMap = ({countries, min, max, selectedCountryCalamity, selectedCoun
   return (
     <div>
       {selectedCountryCalamity && (<div style={{border: "1px solid black"}}>
-        <p>selectedCountryCalamity</p>
-        {/* <p>selectedCountryNews</p> */}
+        <p>{selectedCountryCalamity}</p>
+        <ul>
+          {Object.keys(selectedCountryNews).forEach(newsArticleLink => {
+            return (<li>
+              <a href={newsArticleLink}>{selectedCountryNews[newsArticleLink].title}</a>
+            </li>)
+          })}
+        </ul>
       </div>)}
       <VectorMap
         map='world_mill'

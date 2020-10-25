@@ -9,10 +9,12 @@ export const getCountries = () => {
   })
 }
 
-export const getCalamities = () => {
+export const getCalamities = (countries) => {
   return api({
     url: '/api/calamity',
-    method: 'get'
+    method: 'post',
+    contentType: 'application/json',
+    data: countries
   })
   .then(response => {
     return Promise.resolve(response)
@@ -55,17 +57,11 @@ export const getMaxCalamity = () => {
     url: '/api/max/calamity',
     method: 'get'
   })
-  .catch(() => {
-    return Promise.resolve(0)
-  })
 }
 
 export const getMinCalamity = () => {
   return api({
     url: '/api/min/calamity',
     method: 'get'
-  })
-  .catch(() => {
-    return Promise.resolve(0)
   })
 }

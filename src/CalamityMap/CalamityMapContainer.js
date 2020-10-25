@@ -6,28 +6,39 @@ import { getNews, getCountries, getCalamity, getCalamities, getMaxCalamity, getM
 
 const CalamityMapContainer = () => {
   const [countries, setCountries] = useState([])
-  const [min, setMin] = useState(-400)
-  const [max, setMax] = useState(400)
+  const [min, setMin] = useState(200)
+  const [max, setMax] = useState(-200)
   const [loading, setLoading] = useState(false)
   const [selectedCountry, setSelectedCountry] = useState('')
   const [selectedCountryNews, setSelectedCountryNews] = useState({})
 
   useEffect(() => {
     console.log(`Sending request to /api/countries`)
+    let savedCountries
     setLoading(true)
     getCountries()
       .then(response => {
+        savedCountries = response.data.countries
         if (!response.data.cached) {
-          return Promise.all(response.data.countries.map(country => {
+          return Promise.all(savedCountries.map(country => {
             return getCalamity(country)
               .then(calamity => {
                 const countryCode = Object.keys(country)[0]
-                if (calamity[countryCode] > max) {
-                  setMax(calamity[countryCode])
-                }
-                if (calamity[countryCode] < min) {
-                  setMin(calamity[countryCode])	
-                }
+                // TODO: min and max don't get updated
+                setMax(max => {
+                  if (calamity[countryCode] > max) {
+                    return calamity[countryCode]
+                  } else {
+                    return max
+                  }
+                })
+                setMin(min => {
+                  if (calamity[countryCode] < min) {
+                    return calamity[countryCode]
+                  } else {
+                    return min
+                  }
+                })
                 setCountries(countries => {
                   return {
                     ...countries,
@@ -45,6 +56,7 @@ const CalamityMapContainer = () => {
           })
           .then(response => {
             setMin(response.data.min)
+            return
           })
         } else {
           return getMaxCalamity()
@@ -54,30 +66,28 @@ const CalamityMapContainer = () => {
             })
             .then(response => {
               setMin(response.data.min)
-              return getCalamities(countries)
+              return getCalamities(savedCountries)
             })
-            .then(response => {
-              setCountries(response.data)
-             })
             .catch(err => {
               console.log(err)
-              return getCalamities(countries)
+              return getCalamities(savedCountries)
             })
             .then(response => {
               const calamities = response.data
-              let max = 0
-              let min = 0
+              let newMax = -200
+              let newMin = 200
               for(let i=0; i<calamities.length; i++) {
-                if (calamities[i] > max) {
-                  max = calamities[i]
+                if (calamities[i] > newMax) {
+                  newMax = calamities[i]
                 }
-                if (calamities[i] < min) {
-                  min = calamities[i]
+                if (calamities[i] < newMin) {
+                  newMin = calamities[i]
                 }
               }
               setCountries(calamities)
-              setMax(max)
-              setMin(min)
+              setMax(newMax)
+              setMin(newMin)
+              return
             })
         }
       })

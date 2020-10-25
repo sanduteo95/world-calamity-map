@@ -18,6 +18,7 @@ const port = process.env.PORT || 3001
 
 // create API
 const app = express()
+app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(pino)
 
@@ -34,7 +35,9 @@ app.get('/api/max/calamity', (req, res) => {
     try {
       max = calamityCalculator.getMaxCalamity()
     } catch (err) {
+      console.log(err)
       res.status(500).send(err)
+      return
     }
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify({max: max}))
@@ -59,7 +62,9 @@ app.get('/api/min/calamity', (req, res) => {
     try {
       min = calamityCalculator.getMinCalamity()
     } catch (err) {
+      console.log(err)
       res.status(500).send(err)
+      return
     }
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify({min: min}))
@@ -76,10 +81,11 @@ app.get('/api/min/calamity', (req, res) => {
   }
 })
 
-app.get('/api/calamity', (req, res) => {
+app.post('/api/calamity', (req, res) => {
   console.log(`Receiving request at /api/calamity`)
+  console.log(req.body)
   if (process.env.NODE_ENV === 'production') {
-    calamityCalculator.getCalamities()
+    calamityCalculator.getCalamities(req.body)
       .then(calamities => {
         res.setHeader('Content-Type', 'application/json')
         res.send(JSON.stringify(calamities))
