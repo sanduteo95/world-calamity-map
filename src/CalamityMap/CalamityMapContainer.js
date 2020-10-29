@@ -99,7 +99,7 @@ const CalamityMapContainer = () => {
             .then(response => {
               Array.from(document.getElementsByClassName('jvectormap-tip')).forEach((el) => { 
                 if (el.innerHTML.includes(countryCode)) {
-                  el.className += 'jvectormap-tip-news'
+                  el.className += ' jvectormap-tip-news'
                   el.innerHTML += '<br/>'
                   let child = '<ul>'
                   response.data.news.forEach(newsArticle => {
