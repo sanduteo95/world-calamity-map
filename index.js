@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const pino = require('express-pino-logger')()
 const countries = require('./lib/countries')
-const newsCrawler = require('./lib/news_crawler')
 const calamityCalculator = require('./lib/calamity_calculator')
 const cron = require('./lib/cron')
 
@@ -113,7 +112,7 @@ app.get('/api/calamity/:country', (req, res) => {
 app.get('/api/news/:country', (req, res) => {
   console.log(`Receiving request at /api/nws/${req.params.country}`)
   if (process.env.NODE_ENV === 'production') {
-    newsCrawler.getCountryNews(req.params.country)
+    calamityCalculator.getCalamitiesPerCountryWithNews(req.params.country)
       .then(news => {
         res.setHeader('Content-Type', 'application/json')
         res.send(JSON.stringify({ news: news }))

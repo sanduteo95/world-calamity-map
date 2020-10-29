@@ -39,10 +39,9 @@ export const getCalamity = (country) => {
   })
 }
 
-export const getNews = (country) => {
-  const countryCode = Object.keys(country)[0]
+export const getNews = (countryCode) => {
   return api({
-    url: '/api/news/' + country[countryCode],
+    url: '/api/news/' + countryCode,
     method: 'get'
   })
   .catch(() => {
