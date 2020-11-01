@@ -23,6 +23,7 @@ const CalamityMap = ({countries, min, max, setTooltipContent, setPopupNews}) => 
   return (
     <ComposableMap
       className='CalamityMap'
+      style={{'height': window.innerHeight - (document.getElementById('title') ? document.getElementById('title').clientHeight : 0) + 'px'}}
       data-tip=''
       projectionConfig={{
         rotate: [-10, 0, 0],

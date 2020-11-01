@@ -1,6 +1,5 @@
 .CalamityMap {
     margin: 0 auto;
-    height: max-height;
     width: 100%;
     display: inline-block;
     vertical-align: middle;
@@ -90,7 +89,6 @@ ul.List {
         padding: 0.4rem;
         color: #F8F8F8;
       }
-
 
       & span.Bad {
         background:red;
