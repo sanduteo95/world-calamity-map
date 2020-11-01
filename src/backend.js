@@ -9,6 +9,19 @@ export const getCountries = () => {
   })
 }
 
+export const getCountryInfo = (countryCode) => {
+  return api({
+      url: '/api/countries/' + countryCode,
+      method: 'get'
+  })
+  .catch(() => {
+    return Promise.resolve({
+      info: 'There were problems retrieving information about current country.',
+      country: 'Error'
+    })
+  })
+}
+
 export const getCalamities = (countries) => {
   return api({
     url: '/api/calamity',

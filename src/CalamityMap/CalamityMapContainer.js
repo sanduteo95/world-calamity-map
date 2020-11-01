@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import ReactTooltip from 'react-tooltip'
+import Popup from 'reactjs-popup'
+import { PieChart } from 'react-minimal-pie-chart'
+
 import CalamityMap from './CalamityMap'
 import Loader from '../Loader/Loader'
 
-import { getNews, getCountries, getCalamity, getCalamities, getMaxCalamity, getMinCalamity } from '../backend'
+import { getNews, getCountryInfo, getCountries, getCalamity, getCalamities, getMaxCalamity, getMinCalamity } from '../backend'
 
 const CalamityMapContainer = () => {
   const [countries, setCountries] = useState([])
@@ -10,6 +14,11 @@ const CalamityMapContainer = () => {
   const [max, setMax] = useState(-200)
   const [loading, setLoading] = useState(false)
   const [selectedCountry, setSelectedCountry] = useState('')
+  const [content, setContent] = useState('')
+  const [news, setNews] = useState([])
+  const [navbar, setNavbar] = useState('about')
+  const [country, setCountry] = useState('')
+  const [countryInfo, setCountryInfo] = useState('')
 
   useEffect(() => {
     console.log(`Sending request to /api/countries`)
@@ -92,35 +101,80 @@ const CalamityMapContainer = () => {
   return (
     <Loader isActive={loading}>
       <h1 id='title'>World map of calamities</h1>
-      <CalamityMap countries={countries} min={min} max={max} selectedCountryCalamity={countries[selectedCountry]} handleSelectCountry={(e, countryCode) => {
-        if (selectedCountry !== countryCode) {
-          setSelectedCountry(countryCode)
-          return getNews(countryCode)
-            .then(response => {
-              Array.from(document.getElementsByClassName('jvectormap-tip')).forEach((el) => { 
-                if (el.innerHTML.includes(countryCode)) {
-                  el.className += ' jvectormap-tip-news'
-                  el.innerHTML += '<br/>'
-                  let child = '<ul>'
-                  response.data.news.forEach(newsArticle => {
-                    child += '<li><a href="' + newsArticle.link + '">' + newsArticle.title + '</a></li>'
-                  })
-                  child += '</ul>'
-                  el.innerHTML += child
-                } else {
-                  el.remove()
-                }
+      <CalamityMap 
+        countries={countries} 
+        min={min} 
+        max={max} 
+        setTooltipContent={setContent}
+        setPopupNews={(countryCode) => {
+          if (selectedCountry !== countryCode) {
+            setSelectedCountry(countryCode)
+            return getNews(countryCode)
+              .then(response => {
+                setNews(response.data.news)
+                setNavbar('about')
+                return getCountryInfo(countryCode)
               })
-            })
-          // TODO: list some of the news articles or maybe tags
-          // TODO: list some petitions to help with or resources
-        } else {
-          Array.from(document.getElementsByClassName('jvectormap-tip')).forEach((el) => { 
-            el.remove()
-          })
-          setSelectedCountry('')
-        }
+              .then(response => {
+                setCountry(response.data.country)
+                setCountryInfo(response.data.info)
+              })
+          } else {
+            setSelectedCountry('')
+            setCountry('')
+            setNews([])
+            setNavbar('about')
+            setCountryInfo('')
+          }
       }} />
+      <ReactTooltip>
+        {content}
+      </ReactTooltip>  
+      <Popup open={news && news.length > 0} onClose={() => setNews([])} position='right center'>
+        <ul className='Navbar'>
+          <li class='about'><div onClick={() => setNavbar('about')}>About</div></li>
+          <li class='articles'><div onClick={() => setNavbar('articles')}>Articles</div></li>
+          <li class='petitions'><div onClick={() => setNavbar('petitions')}>Petitions</div></li>
+          <li class='statistics'><div onClick={() => setNavbar('statistics')}>Statistics</div></li>
+        </ul>
+
+        {navbar === 'about' && (
+          <div>
+            <h3>{country}</h3>
+            <div className='Content'>{countryInfo}</div>
+          </div>
+        )}
+        {navbar === 'articles' && (
+          <div className='Content'>
+            <h3>News articles</h3>
+            <ul className='List'>
+              {news.map((newsArticle, index) => {
+                return (<li key={newsArticle.title}>{index + 1}. <a target='__blank' href={newsArticle.link}>{newsArticle.title}</a><span className={newsArticle.score < 0 ? 'Bad' : 'Good'}>{newsArticle.score}</span></li>)
+              })}
+            </ul>
+        </div>
+        )}
+        {navbar === 'petitions' && (
+          <div>TODO</div>
+        )}
+        {navbar === 'statistics' && (
+          <div>
+            <h3>Overall spread of negative vs positive news</h3>
+            <div className='Content'>
+              <PieChart
+                data={[
+                  { title: 'Negative', value: news.filter(newsArticle => newsArticle.score < 0).length, color: 'red' },
+                  { title: 'Positive', value: news.filter(newsArticle => newsArticle.score >= 0).length, color: 'green' }
+                ]}
+              />
+            </div>
+            <div>
+              <div class='Bad Label'></div>Negative
+              <div class='Good Label'></div>Positive
+            </div>
+          </div>
+        )}
+      </Popup>
     </Loader>
   )
 }

@@ -27,6 +27,16 @@ app.get('/api/countries', (req, res) => {
   res.send(JSON.stringify(countries.getCountries()))
 })
 
+app.get('/api/countries/:country', (req, res) => {
+  console.log(`Receiving request at /api/countries/${req.params.country}`)
+
+  countries.getCountryInfo(req.params.country)
+    .then(info => {
+      res.setHeader('Content-Type', 'application/json')
+      res.send(JSON.stringify(info))
+    })
+})
+
 app.get('/api/max/calamity', (req, res) => {
   console.log(`Receiving request at /api/max/calamity`)
   if (process.env.NODE_ENV === 'production') {
@@ -119,22 +129,36 @@ app.get('/api/news/:country', (req, res) => {
       })
     } else {
       res.setHeader('Content-Type', 'application/json')
-      res.send(JSON.stringify({ news: {
-        'http://www.test.com': {
-          title: 'Test',
-          content: 'Test'
+      res.send(JSON.stringify({ news: [
+        {
+          link: 'http://www.test1.com',
+          title: 'Test 1',
+          content: 'Test 1',
+          score: -1
+        },
+        {
+          link: 'http://www.test2.com',
+          title: 'Test 2',
+          content: 'Test 2',
+          score: 1
+        },
+        {
+          link: 'http://www.test3.com',
+          title: 'Test 3',
+          content: 'Test 3',
+          score: 3
         }
-      }}))
+      ]}))
     }
 })
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
-  app.use(express.static(path.join(__dirname, 'build')));
+  app.use(express.static(path.join(__dirname, 'build')))
   // Handle React routing, return all requests to React app
   app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
+    res.sendFile(path.join(__dirname, 'build', 'index.html'))
+  })
 }
 
 app.listen(port, () =>
