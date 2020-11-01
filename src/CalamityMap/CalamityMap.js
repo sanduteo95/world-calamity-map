@@ -1,5 +1,4 @@
 import React from 'react'
-// import { VectorMap } from 'react-jvectormap'
 
 import './CalamityMap.scss'
 
