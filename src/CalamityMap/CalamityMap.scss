@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
 .CalamityMap {
     margin: 0 auto;
     width: 100%;
@@ -8,8 +10,8 @@
 .popup-content {
     margin: auto;
     background:#FFFFFF;
-    width: 50%;
-    min-height: 250px;
+    width: 60%;
+    height: 70%;
     border: 1px solid #333333;
 }
 .popup-arrow {
@@ -34,6 +36,7 @@ ul.Navbar {
     list-style: none;
     background-color: #F8F8F8;
     text-align: center;
+    font-family: 'Roboto', sans-serif;
 
     li {
         width: 25%;
@@ -59,9 +62,20 @@ ul.Navbar {
 }  
 
 .Content {
-    height: 200px;
+    height: 85%;
     overflow-y: scroll;
     padding: 5px;
+    text-align: justify;
+    margin: 5px -5px 0px -5px;
+    overflow-y: auto;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+}
+
+.InnerContent {
+    margin: 10px;
+    height: fit-content;
 }
 
 ul.List {
@@ -79,6 +93,7 @@ ul.List {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      text-align: left;
       border-top: 4px solid #FFFFFF;
       transition: 75ms ease-in;
       &:first-child {
@@ -87,6 +102,9 @@ ul.List {
       & span {
         border-radius: 50px;
         padding: 0.4rem;
+        min-width: 20px;
+        height: auto;
+        text-align: center;
         color: #F8F8F8;
       }
 
@@ -98,9 +116,33 @@ ul.List {
       }
     }
 }
+
+.Title {
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 20px;
+    font-weight: bold;
+}
   
+.Subtitle
+{
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 10px;
+  color: #272727;
+  font-weight: bold;
+}
+
+.PieChart {
+    height: 75%;
+    width: auto;
+}
+
 .Label {
     border-radius: 0;
+    display: inline-block;
     height: 10px;
     width: 10px;
 }
@@ -110,4 +152,9 @@ ul.List {
 }
 .Label.Good {
     background:green;
+}
+
+.LabelName {
+    margin-left: 5px;
+    margin-right: 5px;
 }

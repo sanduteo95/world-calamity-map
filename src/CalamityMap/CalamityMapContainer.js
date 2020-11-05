@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ReactTooltip from 'react-tooltip'
 import Popup from 'reactjs-popup'
 import { PieChart } from 'react-minimal-pie-chart'
+import ReactCountryFlag from 'react-country-flag'
 
 import CalamityMap from './CalamityMap'
 import Loader from '../Loader/Loader'
@@ -109,15 +110,15 @@ const CalamityMapContainer = () => {
         setPopupNews={(countryCode) => {
           if (selectedCountry !== countryCode) {
             setSelectedCountry(countryCode)
-            return getNews(countryCode)
-              .then(response => {
-                setNews(response.data.news)
-                setNavbar('about')
-                return getCountryInfo(countryCode)
-              })
+            setNavbar('about')
+            return getCountryInfo(countryCode)
               .then(response => {
                 setCountry(response.data.country)
                 setCountryInfo(response.data.info)
+                return getNews(countryCode)
+              })
+              .then(response => {
+                setNews(response.data.news)
               })
           } else {
             setSelectedCountry('')
@@ -132,21 +133,29 @@ const CalamityMapContainer = () => {
       </ReactTooltip>  
       <Popup open={news && news.length > 0} onClose={() => setNews([])} position='right center'>
         <ul className='Navbar'>
-          <li class='about'><div onClick={() => setNavbar('about')}>About</div></li>
-          <li class='articles'><div onClick={() => setNavbar('articles')}>Articles</div></li>
-          <li class='petitions'><div onClick={() => setNavbar('petitions')}>Petitions</div></li>
-          <li class='statistics'><div onClick={() => setNavbar('statistics')}>Statistics</div></li>
+          <li className='about'><div onClick={() => setNavbar('about')}>About</div></li>
+          <li className='articles'><div onClick={() => setNavbar('articles')}>Articles</div></li>
+          <li className='petitions'><div onClick={() => setNavbar('petitions')}>Petitions</div></li>
+          <li className='statistics'><div onClick={() => setNavbar('statistics')}>Statistics</div></li>
         </ul>
 
         {navbar === 'about' && (
-          <div>
-            <h3>{country}</h3>
-            <div className='Content'>{countryInfo}</div>
+          <div className='Content'>
+            <div className='Title'>
+              {country}
+              <ReactCountryFlag className='Flag'  countryCode={selectedCountry} />
+            </div>
+            <h3 className='Subtitle'>About</h3>
+            <div className='InnerContent'>{countryInfo}</div>
           </div>
         )}
         {navbar === 'articles' && (
           <div className='Content'>
-            <h3>News articles</h3>
+            <div className='Title'>
+              {country}
+              <ReactCountryFlag className='Flag'  countryCode={selectedCountry} />
+            </div>
+            <h3 className='Subtitle'>News articles</h3>
             <ul className='List'>
               {news.map((newsArticle, index) => {
                 return (<li key={newsArticle.title}>{index + 1}. <a target='__blank' href={newsArticle.link}>{newsArticle.title}</a><span className={newsArticle.score < 0 ? 'Bad' : 'Good'}>{newsArticle.score}</span></li>)
@@ -155,12 +164,23 @@ const CalamityMapContainer = () => {
         </div>
         )}
         {navbar === 'petitions' && (
-          <div>TODO</div>
+          <div className='Content'>
+            <div className='Title'>
+              {country}
+              <ReactCountryFlag className='Flag'  countryCode={selectedCountry} />
+            </div>
+            <h3 className='Subtitle'>Petitions</h3>
+            <div className='InnerContent'></div>
+          </div>
         )}
         {navbar === 'statistics' && (
-          <div>
-            <h3>Overall spread of negative vs positive news</h3>
-            <div className='Content'>
+          <div className='Content'>
+            <div className='Title'>
+              {country}
+              <ReactCountryFlag className='Flag'  countryCode={selectedCountry} />
+            </div>
+            <h3 className='Subtitle'>Statistics</h3>
+            <div className='PieChart'>
               <PieChart
                 data={[
                   { title: 'Negative', value: news.filter(newsArticle => newsArticle.score < 0).length, color: 'red' },
@@ -169,8 +189,8 @@ const CalamityMapContainer = () => {
               />
             </div>
             <div>
-              <div class='Bad Label'></div>Negative
-              <div class='Good Label'></div>Positive
+              <div className='Bad Label'></div><span className='LabelName'>Negative</span>
+              <div className='Good Label'></div><span className='LabelName'>Positive</span>
             </div>
           </div>
         )}
