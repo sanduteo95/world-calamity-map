@@ -3,17 +3,159 @@
 .CalamityMap {
     margin: 0 auto;
     width: 100%;
+    margin-top: 50px;
     display: inline-block;
     vertical-align: middle;
 }
 
+.InfoBoxClosed {
+    width: 100% !important;
+    height: 75px;
+    right: 0;
+    border-bottom-left-radius: 100% !important;
+    border-bottom-right-radius: 100% !important;
+    padding: 5px !important;
+    transition: 1s;
+
+    .InfoBoxTitle {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .InfoBoxOpen {
+        position: relative;
+        margin: 0 auto;
+        left: 0px;
+        bottom: 10px;
+        width: 15px;
+        height: 15px;
+        opacity: 0.3;
+        box-sizing: border-box;
+        border-style: solid;
+        border-color: #333;
+        border-width: 0px 2px 2px 0px;
+        transform: rotate(45deg);
+        transition: border-width 150ms ease-in-out;
+      
+      &:hover {
+        opacity: 1;
+        cursor: pointer;
+      }
+    }
+}
+
+.InfoBoxOpened {
+    transition: 1s;
+}
+
+.InfoBox {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    border-radius: 4px;
+    padding: 20px 20px 20px 20px;
+    box-shadow: 0 1px 15px rgba(27, 31, 35, .15);
+    z-index: 1000;
+    background-color: white;
+
+    .InfoBoxRow {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .InfoBoxColumn {
+        flex-direction: column;
+    }
+
+    .InfoBoxTitle {
+        width: 40%;
+
+        h2 {
+            font-size: 1.5rem;
+            color: #24292e;
+        }
+
+        p {
+            margin-top: 20px;
+            margin-right: 20px;
+            font-size: .75rem;
+            color: #586069;
+        }
+    }
+
+    .InfoBoxDetails {
+        text-align: center;
+        width: 20%;
+        height: 100px;
+        padding-right: 15px;
+
+        p {
+            color: #586069;
+            font-size: 0.75rem;
+        }
+
+        a {
+            padding: 13px 10px 13px 10px;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #24292e;
+        }
+
+        img {
+            height: 2rem;
+            margin-bottom: 10px;
+        }
+    }
+
+    .InfoBoxClose {
+        position: fixed;
+        right: 15px;
+        top: 15px;
+        width: 15px;
+        height: 15px;
+        opacity: 0.3;
+
+        &:hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        &:before,
+        &:after {
+            position: absolute;
+            left: 15px;
+            content: ' ';
+            height: 15px;
+            width: 2px;
+            background-color: #333;
+        }
+
+        &:before {
+            transform: rotate(45deg);
+        }
+
+        &:after {
+            transform: rotate(-45deg);
+        }
+
+    }
+}
+
 .popup-content {
     margin: auto;
-    background:#FFFFFF;
+    background: #FFFFFF;
     width: 60%;
     height: 70%;
     border: 1px solid #333333;
+    z-index: 2000;
 }
+
 .popup-arrow {
     color: #333333;
 }
@@ -26,6 +168,7 @@
 .popup-overlay {
     background: rgba(0, 0, 0, 0.5);
 }
+
 [data-popup='tooltip'].popup-overlay {
     background: transparent;
 }
@@ -45,21 +188,22 @@ ul.Navbar {
         text-align: center;
         display: inline-block;
         border-bottom: none;
-      }
-  
-      div {
+    }
+
+    div {
         text-decoration: none;
         color: #333333;
         display: block;
         padding-left: 5px;
         transition: 0.3s background-color;
+
         &:hover {
             background-color: #333333;
             color: #F8F8F8;
             cursor: pointer;
         }
     }
-}  
+}
 
 .Content {
     height: 85%;
@@ -87,33 +231,43 @@ ul.List {
     min-width: 300px;
     background: #F8F8F8;
     overflow: hidden;
-    & li {
-      height: 2rem;
-      padding: 0.4rem 0.7rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-align: left;
-      border-top: 4px solid #FFFFFF;
-      transition: 75ms ease-in;
-      &:first-child {
-        border-top: none;
-      }
-      & span {
-        border-radius: 50px;
-        padding: 0.4rem;
-        min-width: 20px;
-        height: auto;
-        text-align: center;
-        color: #F8F8F8;
-      }
 
-      & span.Bad {
-        background:red;
-      }
-      & span.Good {
-        background:green;
-      }
+    & li {
+        height: 2rem;
+        padding: 0.4rem 0.7rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        border-top: 4px solid #FFFFFF;
+        transition: 75ms ease-in;
+
+        &:first-child {
+            border-top: none;
+        }
+
+        a {
+            width: 100%;
+            margin-left: 5px;
+        }
+
+        & span {
+            border-radius: 50px;
+            padding: 0.4rem;
+            min-width: 20px;
+            height: auto;
+            text-align: center;
+            color: #F8F8F8;
+            background: blue;
+        }
+
+        & span.Bad {
+            background: red;
+        }
+
+        & span.Good {
+            background: green;
+        }
     }
 }
 
@@ -124,15 +278,14 @@ ul.List {
     font-size: 20px;
     font-weight: bold;
 }
-  
-.Subtitle
-{
-  text-align: right;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  font-size: 10px;
-  color: #272727;
-  font-weight: bold;
+
+.Subtitle {
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 10px;
+    color: #272727;
+    font-weight: bold;
 }
 
 .PieChart {
@@ -145,13 +298,15 @@ ul.List {
     display: inline-block;
     height: 10px;
     width: 10px;
+    margin-left: 10px;
 }
 
 .Label.Bad {
-    background:red;
+    background: red;
 }
+
 .Label.Good {
-    background:green;
+    background: green;
 }
 
 .LabelName {

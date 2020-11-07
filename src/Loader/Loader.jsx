@@ -2,12 +2,12 @@ import React from 'react'
 import LoadingOverlay from 'react-loading-overlay'
 import PuffLoader from 'react-spinners/BounceLoader'
 
-const Loader = ({isActive, children}) => {
+const Loader = ({isActive, text, children}) => {
     return (
         <LoadingOverlay
             active={isActive}
             spinner
-            text='Loading countries...'
+            text={text}
             spinner={<PuffLoader />}
         >
             {children}

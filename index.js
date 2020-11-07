@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const pino = require('express-pino-logger')()
 const countries = require('./lib/countries')
+const petitions = require('./lib/petitions')
 const calamityCalculator = require('./lib/calamity_calculator')
 const cron = require('./lib/cron')
 
@@ -120,7 +121,7 @@ app.get('/api/calamity/:country', (req, res) => {
 })
 
 app.get('/api/news/:country', (req, res) => {
-  console.log(`Receiving request at /api/nws/${req.params.country}`)
+  console.log(`Receiving request at /api/news/${req.params.country}`)
   if (process.env.NODE_ENV === 'production') {
     calamityCalculator.getCalamitiesPerCountryWithNews(req.params.country)
       .then(news => {
@@ -151,6 +152,38 @@ app.get('/api/news/:country', (req, res) => {
       ]}))
     }
 })
+
+
+app.get('/api/petitions/:country', (req, res) => {
+  console.log(`Receiving request at /api/petitions/${req.params.country}`)
+  if (process.env.NODE_ENV === 'production') {
+    petitions.getPetitionsByCountry(req.params.country)
+      .then(petitions => {
+        res.setHeader('Content-Type', 'application/json')
+        res.send(JSON.stringify({ petitions: petitions }))
+      })
+    } else {
+      res.setHeader('Content-Type', 'application/json')
+      res.send(JSON.stringify({ petitions: [
+        {
+          link: 'http://www.petition1.com',
+          title: 'Petition 1',
+          count: 100
+        },
+        {
+          link: 'http://www.petition2.com',
+          title: 'Petition 2',
+          count: 100
+        },
+        {
+          link: 'http://www.petition3.com',
+          title: 'Petition 3',
+          count: 12000
+        }
+      ]}))
+    }
+})
+
 
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files

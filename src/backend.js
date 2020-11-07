@@ -52,17 +52,20 @@ export const getCalamity = (country) => {
   })
 }
 
-export const getNews = (countryCode) => {
+export const getNews = (country) => {
   return api({
-    url: '/api/news/' + countryCode,
+    url: '/api/news/' + country,
     method: 'get'
   })
-  .catch(() => {
-    return Promise.resolve({
-      [countryCode]: 0 // TODO: what to do when one fails
-    })
+}
+
+export const getPetitions = (country) => {
+  return api({
+    url: '/api/petitions/' + country,
+    method: 'get'
   })
 }
+
 
 export const getMaxCalamity = () => {
   return api({
