@@ -147,13 +147,16 @@
     }
 }
 
+.popup-overlay {
+    z-index: 2000;
+}
+
 .popup-content {
     margin: auto;
     background: #FFFFFF;
     width: 60%;
     height: 70%;
     border: 1px solid #333333;
-    z-index: 2000;
 }
 
 .popup-arrow {
