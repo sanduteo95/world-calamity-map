@@ -6,14 +6,6 @@ This project centers around a map that colour codes all countries in the world a
 
 This project came about after realising that a lot of things are going on around the world, but it's very hard to keep up-to-date with everything that is going on. This is meant to make it easier to get an overview of what is happening in the world and to find out if there are any ways to help.
 
-## Screenshots
-
-![Starting page][./images/main.ng]
-
-![Starting page on closing informtional box][https://raw.githubusercontent.com/sanduteo95/world-calamity-map/master/images/main_2.ng]
-
-![Pop-up dialog with more information][https://raw.githubusercontent.com/sanduteo95/world-calamity-map/master/images/popup.ng]
-
 ## Development
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and [Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs).
