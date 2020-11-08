@@ -1,0 +1,48 @@
+.ScoredList > ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    border-radius: 10px;
+    width: max-width;
+    min-width: 300px;
+    background: #F8F8F8;
+    overflow: hidden;
+
+    & li {
+        height: 2rem;
+        padding: 0.4rem 0.7rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        border-top: 4px solid #FFFFFF;
+        transition: 75ms ease-in;
+
+        &:first-child {
+            border-top: none;
+        }
+
+        a {
+            width: 100%;
+            margin-left: 5px;
+        }
+
+        & span {
+            border-radius: 50px;
+            padding: 0.4rem;
+            min-width: 20px;
+            height: auto;
+            text-align: center;
+            color: #F8F8F8;
+            background: blue;
+        }
+
+        & span.Bad {
+            background: red;
+        }
+
+        & span.Good {
+            background: green;
+        }
+    }
+}

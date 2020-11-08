@@ -1,0 +1,28 @@
+.InfoBoxDetails {
+    text-align: center;
+    width: 20%;
+    height: 100px;
+    padding-right: 15px;
+
+    p {
+        color: #586069;
+        font-size: 0.75rem;
+    }
+
+    a {
+        padding: 13px 10px 13px 10px;
+        font-size: .75rem;
+        font-weight: 600;
+    }
+
+    h3 {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #24292e;
+    }
+
+    img {
+        height: 2rem;
+        margin-bottom: 10px;
+    }
+}

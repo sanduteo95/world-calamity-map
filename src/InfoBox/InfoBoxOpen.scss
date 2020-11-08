@@ -1,0 +1,20 @@
+.InfoBoxOpen {
+    position: relative;
+    margin: 0 auto;
+    left: 0px;
+    bottom: 10px;
+    width: 15px;
+    height: 15px;
+    opacity: 0.3;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: #333;
+    border-width: 0px 2px 2px 0px;
+    transform: rotate(45deg);
+    transition: border-width 150ms ease-in-out;
+    
+    &:hover {
+    opacity: 1;
+    cursor: pointer;
+    }
+}

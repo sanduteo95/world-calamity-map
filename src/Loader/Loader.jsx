@@ -6,7 +6,6 @@ const Loader = ({isActive, text, children}) => {
     return (
         <LoadingOverlay
             active={isActive}
-            spinner
             text={text}
             spinner={<PuffLoader />}
         >

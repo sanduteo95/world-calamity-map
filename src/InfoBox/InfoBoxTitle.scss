@@ -1,0 +1,22 @@
+.InfoBoxTitle {
+    width: 40%;
+
+    h2 {
+        font-size: 1.5rem;
+        color: #24292e;
+    }
+
+    p {
+        margin-top: 20px;
+        margin-right: 20px;
+        font-size: .75rem;
+        color: #586069;
+    }
+}
+
+.InfoBoxClosed {
+    .InfoBoxTitle {
+        margin: 0 auto;
+        text-align: center;
+    }
+}

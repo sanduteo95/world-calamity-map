@@ -1,0 +1,35 @@
+.Navbar {
+    height: -webkit-fill-available;
+}
+
+.NavbarTabs {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background-color: #F8F8F8;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+
+    li {
+        width: 25%;
+        font-size: 1em;
+        line-height: 50px;
+        text-align: center;
+        display: inline-block;
+        border-bottom: none;
+    }
+
+    div {
+        text-decoration: none;
+        color: #333333;
+        display: block;
+        padding-left: 5px;
+        transition: 0.3s background-color;
+
+        &:hover {
+            background-color: #333333;
+            color: #F8F8F8;
+            cursor: pointer;
+        }
+    }
+}
