@@ -21,23 +21,25 @@ const CountryPopup = ({countryCode, handleClose, handleError}) => {
   const [petitions, setPetitions] = useState([])
 
   useEffect(() => {
-    getCountryInfo(countryCode)
-      .then(response => {
-        setCountry(response.data.country)
-        setCountryInfo(response.data.info)
-        return getPetitions(response.data.country)
-      })
-      .then(response => {
-        setPetitions(response.data.petitions)
-        return getNews(countryCode)
-      })
-      .then(response => {
-        setNews(response.data.news)
-      })
-      .catch(err => {
-        handleError(err.message)
-      })
-  })
+    if (news.length === 0) {
+      getCountryInfo(countryCode)
+        .then(response => {
+          setCountry(response.data.country)
+          setCountryInfo(response.data.info)
+          return getPetitions(response.data.country)
+        })
+        .then(response => {
+          setPetitions(response.data.petitions)
+          return getNews(countryCode)
+        })
+        .then(response => {
+          setNews(response.data.news)
+        })
+        .catch(err => {
+          handleError(err.message)
+        })
+    }
+  }, [])
 
   return (
     <Popup open onClose={handleClose} position='right center'>
