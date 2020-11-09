@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ReactTooltip from 'react-tooltip'
 
 import CalamityMap from './CalamityMap'
+import Legend from './Legend/Legend'
 import Loader from '../Loader/Loader'
 import InfoBox from '../InfoBox/InfoBox'
 import CountryPopup from '../CountryPopup/CountryPopup'
@@ -113,6 +114,7 @@ const CalamityMapContainer = () => {
           setCountryCode(countryCode)
           setOpenCountryPopup(true)
         }} />
+      <Legend min={min} max={max}/>
       <ReactTooltip>
         {tooltipContent}
       </ReactTooltip>  
