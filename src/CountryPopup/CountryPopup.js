@@ -12,7 +12,7 @@ import './CountryPopup.scss'
 
 import { getNews, getPetitions, getCountryInfo, } from '../backend'
 
-const CountryPopup = ({countryCode, handleClose}) => {
+const CountryPopup = ({countryCode, handleClose, handleError}) => {
   const [navbar, setNavbar] = useState('about')
 
   const [country, setCountry] = useState('')
@@ -33,6 +33,9 @@ const CountryPopup = ({countryCode, handleClose}) => {
       })
       .then(response => {
         setNews(response.data.news)
+      })
+      .catch(err => {
+        handleError(err.message)
       })
   })
 

@@ -36,6 +36,9 @@ app.get('/api/countries/:country', (req, res) => {
       res.setHeader('Content-Type', 'application/json')
       res.send(JSON.stringify(info))
     })
+    .catch(err => {
+      res.status(500).send(err)
+    })
 })
 
 app.get('/api/max/calamity', (req, res) => {
@@ -45,7 +48,6 @@ app.get('/api/max/calamity', (req, res) => {
     try {
       max = calamityCalculator.getMaxCalamity()
     } catch (err) {
-      console.log(err)
       res.status(500).send(err)
       return
     }
@@ -72,7 +74,6 @@ app.get('/api/min/calamity', (req, res) => {
     try {
       min = calamityCalculator.getMinCalamity()
     } catch (err) {
-      console.log(err)
       res.status(500).send(err)
       return
     }
@@ -100,6 +101,9 @@ app.post('/api/calamity', (req, res) => {
         res.setHeader('Content-Type', 'application/json')
         res.send(JSON.stringify(calamities))
       })
+      .catch(err => {
+        res.status(500).send(err)
+      })
   } else {
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify(mocks.calamities))
@@ -114,6 +118,9 @@ app.get('/api/calamity/:country', (req, res) => {
         res.setHeader('Content-Type', 'application/json')
         res.send(JSON.stringify({ calamity: calamity }))
       })
+      .catch(err => {
+        res.status(500).send(err)
+      })
     } else {
       res.setHeader('Content-Type', 'application/json')
       res.send(JSON.stringify({ calamity: mocks.calamity(req.params.country) }))
@@ -127,6 +134,9 @@ app.get('/api/news/:country', (req, res) => {
       .then(news => {
         res.setHeader('Content-Type', 'application/json')
         res.send(JSON.stringify({ news: news }))
+      })
+      .catch(err => {
+        res.status(500).send(err)
       })
     } else {
       res.setHeader('Content-Type', 'application/json')
@@ -161,6 +171,9 @@ app.get('/api/petitions/:country', (req, res) => {
       .then(petitions => {
         res.setHeader('Content-Type', 'application/json')
         res.send(JSON.stringify({ petitions: petitions }))
+      })
+      .catch(err => {
+        res.status(500).send(err)
       })
     } else {
       res.setHeader('Content-Type', 'application/json')

@@ -1,0 +1,46 @@
+.ErrorPopup-content {
+  margin: auto;
+  background: #FFFFFF;
+  width: 50%;
+  height: 50%;
+  border: 1px solid #333333;
+
+  .Title {
+    padding: 5px;
+
+    .ErrorIcon {
+      color: red;
+    }
+  }
+
+  .Content {
+    padding: 20px;
+
+    .ErrorMessage {
+      color: red;
+      padding: 20px;
+      text-align: center;
+      vertical-align: center;
+      border-radius: 15px;
+      border: #333333;
+      background-color: pink;
+    }
+  }
+}
+
+.ErrorPopup-arrow {
+  color: #333333;
+}
+
+[role='tooltip'].ErrorPopup-content {
+  width: 200px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 3px;
+}
+
+.ErrorPopup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+[data-popup='tooltip'].ErrorPopup-overlay {
+  background: transparent;
+}

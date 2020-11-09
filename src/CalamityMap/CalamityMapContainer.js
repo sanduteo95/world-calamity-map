@@ -5,12 +5,14 @@ import CalamityMap from './CalamityMap'
 import Loader from '../Loader/Loader'
 import InfoBox from '../InfoBox/InfoBox'
 import CountryPopup from '../CountryPopup/CountryPopup'
+import ErrorPopup from '../ErrorPopup/ErrorPopup'
 
 import { getCountries, getCalamity, getCalamities, getMaxCalamity, getMinCalamity } from '../backend'
 
 const CalamityMapContainer = () => {
   const [loading, setLoading] = useState(false)
   const [openCountryPopup, setOpenCountryPopup] = useState(false)
+  const [error, setError] = useState('')
 
   const [countries, setCountries] = useState([])
   const [min, setMin] = useState(200)
@@ -53,6 +55,9 @@ const CalamityMapContainer = () => {
                 })
               })
           }))
+          .catch(err => {
+            setError(err.message)
+          })
         } else {
           return getMaxCalamity()
             .then(response => {
@@ -63,8 +68,7 @@ const CalamityMapContainer = () => {
               setMin(response.data.min)
               return getCalamities(savedCountries)
             })
-            .catch(err => {
-              console.log(err)
+            .catch(() => {
               return getCalamities(savedCountries)
             })
             .then(response => {
@@ -92,7 +96,7 @@ const CalamityMapContainer = () => {
         setLoading(false)
       })
       .catch(err => {
-        console.log(err)
+        setError(err.message)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -114,7 +118,9 @@ const CalamityMapContainer = () => {
       </ReactTooltip>  
       {openCountryPopup && <CountryPopup 
         countryCode={countryCode} 
-        handleClose={() => setOpenCountryPopup(false)} />}
+        handleClose={() => setOpenCountryPopup(false)}
+        handleError={setError} />}
+      {error !== '' && <ErrorPopup message={error} handleClose={() => setError('')} />}
     </Loader>
   )
 }

@@ -2,11 +2,26 @@ import axios from 'axios'
 
 const api = axios.create()
 
+const handleError = error => {
+  let err
+  if (error.response) {
+    err = new Error(error.response.data)
+    err.statusCode = error.response.status
+  } else if (error.request) {
+    err = new Error('Did not receive a response for request' + JSON.stringify(error.request))
+    err.statusCode = 500
+  } else {
+    err = new Error(error.message)
+    err.statusCode = 500
+  }
+  throw err
+}
 export const getCountries = () => {
   return api({
-      url: '/api/countries',
-      method: 'get'
+    url: '/api/countries',
+    method: 'get'
   })
+  .catch(handleError)
 }
 
 export const getCountryInfo = (countryCode) => {
@@ -32,6 +47,7 @@ export const getCalamities = (countries) => {
   .then(response => {
     return Promise.resolve(response)
   })
+  .catch(handleError)
 }
 
 export const getCalamity = (country) => {
@@ -57,6 +73,7 @@ export const getNews = (country) => {
     url: '/api/news/' + country,
     method: 'get'
   })
+  .catch(handleError)
 }
 
 export const getPetitions = (country) => {
@@ -64,6 +81,7 @@ export const getPetitions = (country) => {
     url: '/api/petitions/' + country,
     method: 'get'
   })
+  .catch(handleError)
 }
 
 
@@ -75,6 +93,7 @@ export const getMaxCalamity = () => {
   .then(response => {
     return Promise.resolve(response)
   })
+  .catch(handleError)
 }
 
 export const getMinCalamity = () => {
@@ -85,4 +104,5 @@ export const getMinCalamity = () => {
   .then(response => {
     return Promise.resolve(response)
   })
+  .catch(handleError)
 }
