@@ -1,5 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 
+import ZoomIn from './Zoom/ZoomIn'
+import ZoomOut from './Zoom/ZoomOut'
 import './CalamityMap.scss'
 
 import { scaleLinear } from 'd3-scale'
@@ -20,8 +22,25 @@ const CalamityMap = ({countries, min, max, setTooltipContent, setPopupNews}) => 
     .domain([min, max])
     .range(['#ff0000', '#146804'])
     
+  const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 })
+
+  function handleZoomIn() {
+    if (position.zoom >= 4) return
+    setPosition(pos => ({ ...pos, zoom: pos.zoom * 2 }))
+  }
+
+  function handleZoomOut() {
+    if (position.zoom <= 1) return
+    setPosition(pos => ({ ...pos, zoom: pos.zoom / 2 }))
+  }
+
+  function handleMoveEnd(position) {
+    setPosition(position)
+  }
+
   return (
-    <ComposableMap
+    <div>
+      <ComposableMap
       className='CalamityMap'
       style={{'height': window.innerHeight - (document.getElementById('title') ? document.getElementById('title').clientHeight : 0) + 'px'}}
       data-tip=''
@@ -30,7 +49,10 @@ const CalamityMap = ({countries, min, max, setTooltipContent, setPopupNews}) => 
         scale: 147
       }}
     >
-      <ZoomableGroup zoom={1}>
+      <ZoomableGroup 
+        zoom={position.zoom}
+        center={position.coordinates}
+        onMoveEnd={handleMoveEnd}>
         <Sphere stroke='#E4E5E6' strokeWidth={0.5} />
         <Graticule stroke='#E4E5E6' strokeWidth={0.5} />
         {Object.keys(countries).length > 0 && (
@@ -72,6 +94,11 @@ const CalamityMap = ({countries, min, max, setTooltipContent, setPopupNews}) => 
         )}
       </ZoomableGroup>
     </ComposableMap>
+    <div className='MapControls'>
+      <ZoomIn handleClick={handleZoomIn} />
+      <ZoomOut handleClick={handleZoomOut} />
+    </div>
+  </div>
   )
 }
 

@@ -1,9 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 .CalamityMap {
-    margin: 0 auto;
-    width: 100%;
-    margin-top: 80px;
-    display: inline-block;
-    vertical-align: middle;
+  margin: 0 auto;
+  width: 100%;
+  margin-top: 60px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.MapControls {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  margin: 10px 0;
+  text-align: center;
+  transform: translateX(-50%);
 }
