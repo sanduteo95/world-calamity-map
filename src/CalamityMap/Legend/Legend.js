@@ -5,7 +5,7 @@ import './Legend.scss'
 const Legend = ({min, max}) => {
   let values = []
   for(let i=min; i<=max; i+= (max-min)/4) {
-    values.push(i)
+    values.push(Math.ceil(i))
   }
 
   return (
