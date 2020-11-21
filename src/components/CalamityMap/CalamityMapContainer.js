@@ -8,22 +8,23 @@ import InfoBox from '../InfoBox/InfoBox'
 import CountryPopup from '../CountryPopup/CountryPopup'
 import ErrorPopup from '../ErrorPopup/ErrorPopup'
 
-import { getCountries, getCalamity, getCalamities, getMaxCalamity, getMinCalamity } from '../backend'
+import { getCountries, getCalamity, getCalamities, getMaxCalamity, getMinCalamity } from '../../services/backend'
 
 const CalamityMapContainer = () => {
   const [loading, setLoading] = useState(false)
   const [openCountryPopup, setOpenCountryPopup] = useState(false)
   const [error, setError] = useState('')
 
-  const [countries, setCountries] = useState([])
-  const [min, setMin] = useState(200)
-  const [max, setMax] = useState(-200)
-  
+  const [map, setMap] = useState({
+    min: 200,
+    max: -200,
+    countries: []
+  })
+
   const [countryCode, setCountryCode] = useState('')
   const [tooltipContent, setTooltipContent] = useState('')
 
   useEffect(() => {
-    console.log(`Sending request to /api/countries`)
     let savedCountries
     setLoading(true)
     getCountries()
@@ -34,61 +35,56 @@ const CalamityMapContainer = () => {
             return getCalamity(country)
               .then(calamity => {
                 const countryCode = Object.keys(country)[0]
-                setMax(max => {
-                  if (calamity[countryCode] > max) {
-                    return calamity[countryCode]
-                  } else {
-                    return max
-                  }
-                })
-                setMin(min => {
-                  if (calamity[countryCode] < min) {
-                    return calamity[countryCode]
-                  } else {
-                    return min
-                  }
-                })
-                setCountries(countries => {
+                console.log('---here---')
+                setMap(map => {
                   return {
-                    ...countries,
-                    ...calamity
+                    min: calamity[countryCode] < map.min ? calamity[countryCode] : map.min,
+                    max: calamity[countryCode] > map.max ? calamity[countryCode] : map.max,
+                    countries: {
+                      ...map.countries,
+                      ...calamity
+                    }
                   }
                 })
+                return
               })
           }))
           .catch(err => {
             setError(err.message)
           })
         } else {
+          let newMin = 200, newMax = -200
           return getMaxCalamity()
             .then(response => {
-              setMax(response.data.max)
+              newMax = response.data.max
               return getMinCalamity()
             })
             .then(response => {
-              setMin(response.data.min)
+              newMin = response.data.min
               return getCalamities(savedCountries)
             })
             .catch(() => {
               return getCalamities(savedCountries)
+                .then(response => {
+                  if (newMin !== map.min && newMax !== map.max) {
+                    for(let i=0; i<response.data.length; i++) {
+                      if (response.data[i] > newMax) {
+                        newMax = response.data[i]
+                      }
+                      if (response.data[i] < newMin) {
+                        newMin = response.data[i]
+                      }
+                    }
+                  }
+                  return response
+                })
             })
             .then(response => {
-              const calamities = response.data
-              let newMax = -200
-              let newMin = 200
-              if (max !== newMax && min !== newMin) {
-                for(let i=0; i<calamities.length; i++) {
-                  if (calamities[i] > newMax) {
-                    newMax = calamities[i]
-                  }
-                  if (calamities[i] < newMin) {
-                    newMin = calamities[i]
-                  }
-                }
-                setMax(newMax)
-                setMin(newMin)
-              }
-              setCountries(calamities)
+              setMap({
+                min: newMin,
+                max: newMax,
+                countries: response.data
+              })
               return
             })
         }
@@ -100,21 +96,21 @@ const CalamityMapContainer = () => {
         setError(err.message)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [map, error, loading])
 
   return (
-    <Loader isActive={loading} text={countries.length > 0 ? 'Loading country data...' : 'Loading countries...'}>
+    <Loader isActive={loading} text={map.countries.length > 0 ? 'Loading country data...' : 'Loading countries...'}>
       <InfoBox />
       <CalamityMap 
-        countries={countries} 
-        min={min} 
-        max={max} 
+        countries={map.countries} 
+        min={map.min} 
+        max={map.max} 
         setTooltipContent={setTooltipContent}
         setPopupNews={(countryCode) => {
           setCountryCode(countryCode)
           setOpenCountryPopup(true)
         }} />
-      <Legend min={min} max={max}/>
+      <Legend min={map.min} max={map.max}/>
       <ReactTooltip>
         {tooltipContent}
       </ReactTooltip>  

@@ -1,6 +1,13 @@
 import axios from 'axios'
-
-const api = axios.create()
+import { setupCache } from 'axios-cache-adapter'
+ 
+const cache = setupCache({
+  maxAge: 24 * 60 * 60 * 1000 // 24 h
+})
+ 
+const api = axios.create({
+  adapter: cache.adapter
+})
 
 const handleError = error => {
   let err
@@ -16,6 +23,7 @@ const handleError = error => {
   }
   throw err
 }
+
 export const getCountries = () => {
   return api({
     url: '/api/countries',

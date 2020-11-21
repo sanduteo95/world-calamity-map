@@ -10,7 +10,7 @@ import Label from '../Label/Label'
 
 import './CountryPopup.scss'
 
-import { getNews, getPetitions, getCountryInfo, } from '../backend'
+import { getNews, getPetitions, getCountryInfo, } from '../../services/backend'
 
 const CountryPopup = ({countryCode, handleClose, handleError}) => {
   const [navbar, setNavbar] = useState('about')
@@ -39,6 +39,7 @@ const CountryPopup = ({countryCode, handleClose, handleError}) => {
           handleError(err.message)
         })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

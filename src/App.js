@@ -1,5 +1,5 @@
 import React from 'react'
-import CalamityMapContainer from './CalamityMap/CalamityMapContainer'
+import CalamityMapContainer from './components/CalamityMap/CalamityMapContainer'
 
 import { Route } from 'react-router-dom'
 
