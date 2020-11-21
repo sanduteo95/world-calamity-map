@@ -18,7 +18,7 @@ const CalamityMapContainer = () => {
   const [map, setMap] = useState({
     min: 200,
     max: -200,
-    countries: []
+    countries: {}
   })
 
   const [countryCode, setCountryCode] = useState('')
@@ -30,7 +30,8 @@ const CalamityMapContainer = () => {
     getCountries()
       .then(response => {
         savedCountries = response.data.countries
-        if (!response.data.cached) {
+        const cached = response.data.cached
+        if (!cached) {
           return Promise.all(savedCountries.map(country => {
             return getCalamity(country)
               .then(calamity => {
@@ -91,7 +92,7 @@ const CalamityMapContainer = () => {
         setError(err.message)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, error, loading])
+  }, [])
 
   return (
     <Loader isActive={loading} text={map.countries.length > 0 ? 'Loading country data...' : 'Loading countries...'}>
