@@ -15,8 +15,10 @@ import { getNews, getPetitions, getCountryInfo, } from '../../services/backend'
 const CountryPopup = ({countryCode, handleClose, handleError}) => {
   const [navbar, setNavbar] = useState('about')
 
-  const [country, setCountry] = useState('')
-  const [countryInfo, setCountryInfo] = useState('')
+  const [country, setCountry] = useState({
+    name: '',
+    info: ''
+  })
   const [news, setNews] = useState([])
   const [petitions, setPetitions] = useState([])
 
@@ -24,8 +26,10 @@ const CountryPopup = ({countryCode, handleClose, handleError}) => {
     if (news.length === 0) {
       getCountryInfo(countryCode)
         .then(response => {
-          setCountry(response.data.country)
-          setCountryInfo(response.data.info)
+          setCountry({
+            name: response.data.country,
+            info: response.data.info
+          })
           return getPetitions(response.data.country)
         })
         .then(response => {
@@ -46,22 +50,22 @@ const CountryPopup = ({countryCode, handleClose, handleError}) => {
     <Popup open onClose={handleClose} position='right center'>
       <Navbar 
         openTab={(tab) => setNavbar(tab)}
-        tabTitle={country}
+        tabTitle={country.name}
         tabIcon={<ReactCountryFlag className='Flag' countryCode={countryCode} />}
         tabSubtitle={navbar.toUpperCase()}
         renderTabContent={() => {
           switch (navbar) {
             case 'about':
-              return <div className='InnerContent'>{countryInfo}</div>
+              return <div className='InnerContent'>{country.info}</div>
             case 'articles':
               return (
                 <div className='InnerContent'>
-                  <ScoredList items={news} scoreKey='score' emptyListMessage={'Oops! It seems I was unable to find any news specifically from ' + country} />
+                  <ScoredList items={news} scoreKey='score' emptyListMessage={'Oops! It seems I was unable to find any news specifically from ' + country.name} />
                 </div>)
             case 'petitions':
               return (
                 <div className='InnerContent'>
-                  <ScoredList items={petitions} scoreKey='count' emptyListMessage={'Oops! It seems I was unable to find any petitions specifically for ' + country} />
+                  <ScoredList items={petitions} scoreKey='count' emptyListMessage={'Oops! It seems I was unable to find any petitions specifically for ' + country.name} />
                 </div>
               )
             case 'statistics':
@@ -83,7 +87,7 @@ const CountryPopup = ({countryCode, handleClose, handleError}) => {
                       <Label />
                     </div>
                   )}
-                  {news.length === 0 && (<p>Oops! It seems I was unable to find any news specifically from {country} </p>)}
+                  {news.length === 0 && (<p>Oops! It seems I was unable to find any news specifically from {country.name} </p>)}
                 </div>
               )
             default:

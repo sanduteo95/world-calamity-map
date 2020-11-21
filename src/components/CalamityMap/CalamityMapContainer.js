@@ -35,7 +35,6 @@ const CalamityMapContainer = () => {
             return getCalamity(country)
               .then(calamity => {
                 const countryCode = Object.keys(country)[0]
-                console.log('---here---')
                 setMap(map => {
                   return {
                     min: calamity[countryCode] < map.min ? calamity[countryCode] : map.min,
@@ -46,12 +45,8 @@ const CalamityMapContainer = () => {
                     }
                   }
                 })
-                return
               })
           }))
-          .catch(err => {
-            setError(err.message)
-          })
         } else {
           let newMin = 200, newMax = -200
           return getMaxCalamity()
