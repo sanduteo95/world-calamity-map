@@ -8,7 +8,7 @@ import InfoBox from '../InfoBox/InfoBox'
 import CountryPopup from '../CountryPopup/CountryPopup'
 import ErrorPopup from '../ErrorPopup/ErrorPopup'
 
-import { getCountries, getCalamity, getCalamities, getMaxCalamity, getMinCalamity } from '../../services/backend'
+import { getCountries, getCalamities, getMaxCalamity, getMinCalamity } from '../../services/backend'
 
 const CalamityMapContainer = () => {
   const [loading, setLoading] = useState(false)
@@ -25,65 +25,31 @@ const CalamityMapContainer = () => {
   const [tooltipContent, setTooltipContent] = useState('')
 
   useEffect(() => {
-    let savedCountries
     setLoading(true)
     getCountries()
       .then(response => {
-        savedCountries = response.data.countries
-        const cached = response.data.cached
-        if (!cached) {
-          return Promise.all(savedCountries.map(country => {
-            return getCalamity(country)
-              .then(calamity => {
-                const countryCode = Object.keys(country)[0]
-                setMap(map => {
-                  return {
-                    min: calamity[countryCode] < map.min ? calamity[countryCode] : map.min,
-                    max: calamity[countryCode] > map.max ? calamity[countryCode] : map.max,
-                    countries: {
-                      ...map.countries,
-                      ...calamity
-                    }
-                  }
-                })
-              })
-          }))
-        } else {
-          let newMin = 200, newMax = -200
-          return getMaxCalamity()
-            .then(response => {
-              newMax = response.data.max
-              return getMinCalamity()
+        const savedCountries = response.data.countries
+
+        let calamities
+        let newMin
+        let newMax
+        return getCalamities(savedCountries)
+          .then(response => {
+            calamities = response.data
+            return getMaxCalamity()
+          }).then(response => {
+            newMax = response.data.max
+            return getMinCalamity()
+          })
+          .then(response => {
+            newMin = response.data.min
+            setMap({
+              min: newMin,
+              max: newMax,
+              countries: calamities
             })
-            .then(response => {
-              newMin = response.data.min
-              return getCalamities(savedCountries)
-            })
-            .catch(() => {
-              return getCalamities(savedCountries)
-                .then(response => {
-                  if (newMin !== map.min && newMax !== map.max) {
-                    for(let i=0; i<response.data.length; i++) {
-                      if (response.data[i] > newMax) {
-                        newMax = response.data[i]
-                      }
-                      if (response.data[i] < newMin) {
-                        newMin = response.data[i]
-                      }
-                    }
-                  }
-                  return response
-                })
-            })
-            .then(response => {
-              setMap({
-                min: newMin,
-                max: newMax,
-                countries: response.data
-              })
-              return
-            })
-        }
+            return
+          })
       })
       .then(() => {
         setLoading(false)
