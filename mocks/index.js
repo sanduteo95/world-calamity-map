@@ -1,4 +1,4 @@
-const countries = require('node-countries')
+const countries = require('country-code-lookup')
 
 module.exports.calamities = {
     'AD': 14,
@@ -254,7 +254,8 @@ module.exports.calamities = {
 
 module.exports.calamity = name => {
     console.log('Getting stored calamity for country: ' + name)
-    const countryCode = countries.getCountryByName(name).alpha2
+    console.log(countries.byCountry(name))
+    const countryCode = countries.byCountry(name).iso2
     if (countryCode) {
         console.log('Country code: ' + countryCode)
         return module.exports.calamities[countryCode]

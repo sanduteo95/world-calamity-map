@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer, useCallback } from 'react'
 import ReactTooltip from 'react-tooltip'
 
 import CalamityMap from './CalamityMap'
@@ -15,7 +15,29 @@ const CalamityMapContainer = () => {
   const [openCountryPopup, setOpenCountryPopup] = useState(false)
   const [error, setError] = useState('')
 
-  const [map, setMap] = useState({
+  const mapReducer = (state, action) => {
+    switch (action.type) {
+      case 'UPDATE_MAP':
+        return {...state, map: {
+          min: action.calamity[action.countryCode] < state.min ? action.calamity[action.countryCode] : state.min,
+          max: action.calamity[action.countryCode] > state.max ? action.calamity[action.countryCode] : state.max,
+          countries: {
+            ...state.countries,
+            ...action.calamity
+          }
+        }}
+      case 'UPDATE_MIN':
+        return {...state, min: action.min}
+      case 'UPDATE_MAX':
+        return {...state, max: action.max}
+      case 'UPDATE_COUNTRIES':
+        return {...state, countries: action.countries}
+      default:
+        throw new Error('Invalid Action Type')
+    }
+  }
+
+  let [map, dispatch] = useReducer(mapReducer, {
     min: 200,
     max: -200,
     countries: {}
@@ -24,7 +46,7 @@ const CalamityMapContainer = () => {
   const [countryCode, setCountryCode] = useState('')
   const [tooltipContent, setTooltipContent] = useState('')
 
-  useEffect(() => {
+  // useEffect(() => {
     let savedCountries
     setLoading(true)
     getCountries()
@@ -34,19 +56,13 @@ const CalamityMapContainer = () => {
         if (!cached) {
           return Promise.all(savedCountries.map(country => {
             return getCalamity(country)
-              .then(calamity => {
-                const countryCode = Object.keys(country)[0]
-                setMap(map => {
-                  return {
-                    min: calamity[countryCode] < map.min ? calamity[countryCode] : map.min,
-                    max: calamity[countryCode] > map.max ? calamity[countryCode] : map.max,
-                    countries: {
-                      ...map.countries,
-                      ...calamity
-                    }
-                  }
-                })
-              })
+            .then(calamity => {
+              const countryCode = Object.keys(country)[0]
+              dispatch({ type: 'UPDATE_MAP', countryCode: countryCode, calamity: calamity})
+            })
+            .catch(error => {
+              console.log(error)
+            })
           }))
         } else {
           let newMin = 200, newMax = -200
@@ -76,11 +92,9 @@ const CalamityMapContainer = () => {
                 })
             })
             .then(response => {
-              setMap({
-                min: newMin,
-                max: newMax,
-                countries: response.data
-              })
+              dispatch({ type: 'UPDATE_MIN', min: newMin})
+              dispatch({ type: 'UPDATE_MAX', max: newMax})
+              dispatch({ type: 'UPDATE_COUNTRIES', countries: response.data})
               return
             })
         }
@@ -92,7 +106,7 @@ const CalamityMapContainer = () => {
         setError(err.message)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // }, [dispatch])
 
   return (
     <Loader isActive={loading} text={map.countries.length > 0 ? 'Loading country data...' : 'Loading countries...'}>
