@@ -10,9 +10,7 @@ const cron = require('./lib/cron')
 const mocks = require('./mocks/index')
 
 // start cron job
-if (process.env.NODE_ENV === 'production') {
-  cron.start()
-}
+cron.start()
 
 const port = process.env.PORT || 3001
 
